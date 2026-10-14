@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>.htaccess, Nginx &amp; Caddy Rule Generator</title>
+<link rel="canonical" href="https://www.paidhosting.com/htaccess-nginx-generator/">
+<style>body{margin:0;padding:24px 16px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#fff;color:#0f2d4a}</style>
+<style>
+/* ============================================================
+   ALL STYLES SCOPED TO #ph-htaccessgen
+   ============================================================ */
+
+#ph-htaccessgen {
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 20px !important;
+  line-height: 1.8 !important;
+  color: #1a1f2e !important;
+  background: #ffffff !important;
+  max-width: 860px !important;
+  margin: -30px auto 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+#ph-htaccessgen *, #ph-htaccessgen *::before, #ph-htaccessgen *::after { box-sizing: border-box !important; }
+
+#ph-htaccessgen .hrg-hero {
+  background: linear-gradient(160deg, #1a3a5c 0%, #0f2d4a 50%, #0a1e33 100%) !important;
+  border-radius: 16px !important; padding: 52px 40px !important; margin-bottom: 40px !important;
+  position: relative !important; overflow: hidden !important;
+}
+#ph-htaccessgen .hrg-hero::before {
+  content: '' !important; position: absolute !important; inset: 0 !important;
+  background: linear-gradient(120deg, rgba(255,255,255,0.04) 0%, transparent 50%) !important;
+  pointer-events: none !important;
+}
+#ph-htaccessgen .hrg-eyebrow {
+  font-size: 12px !important; font-weight: 700 !important; letter-spacing: 0.16em !important;
+  text-transform: uppercase !important; color: #f4a629 !important;
+  margin: 0 0 12px 0 !important; padding: 0 !important; border: none !important;
+  background: none !important; position: relative !important; z-index: 1 !important; display: block !important;
+}
+#ph-htaccessgen .hrg-hero h1 {
+  font-family: 'DM Serif Display', serif !important;
+  font-size: clamp(32px, 5vw, 52px) !important; font-weight: 400 !important;
+  color: #ffffff !important; line-height: 1.15 !important;
+  margin: 0 0 14px 0 !important; padding: 0 !important; border: none !important;
+  position: relative !important; z-index: 1 !important;
+}
+#ph-htaccessgen .hrg-subtitle {
+  font-size: 19px !important; color: rgba(255,255,255,0.92) !important;
+  font-style: italic !important; font-weight: 300 !important;
+  position: relative !important; z-index: 1 !important; margin: 0 0 20px 0 !important; padding: 0 !important;
+  max-width: 640px !important;
+}
+#ph-htaccessgen .hrg-hero-meta { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; position: relative !important; z-index: 1 !important; }
+#ph-htaccessgen .hrg-badge {
+  background: rgba(255,255,255,0.1) !important; border: 1px solid rgba(255,255,255,0.18) !important;
+  border-radius: 100px !important; padding: 6px 14px !important;
+  font-size: 13px !important; font-weight: 500 !important; color: rgba(255,255,255,0.9) !important;
+}
+#ph-htaccessgen .hrg-intro {
+  font-size: 19px !important; color: #1a1f2e !important; line-height: 1.85 !important;
+  margin: 0 0 32px 0 !important; padding: 0 !important;
+}
+#ph-htaccessgen h2 {
+  font-family: 'DM Serif Display', serif !important; font-size: 32px !important;
+  font-weight: 400 !important; color: #0f2d4a !important; line-height: 1.3 !important;
+  margin: 44px 0 16px 0 !important; padding: 0 !important; border: none !important; background: none !important;
+}
+#ph-htaccessgen .hrg-subhead {
+  font-family: 'DM Sans', sans-serif !important; font-size: 20px !important; font-weight: 700 !important;
+  color: #0f2d4a !important; margin: 24px 0 8px 0 !important; padding: 0 !important;
+}
+#ph-htaccessgen p { margin: 0 0 16px 0 !important; padding: 0 !important; }
+#ph-htaccessgen code {
+  background: #eef4fb !important; color: #0f2d4a !important; padding: 2px 6px !important;
+  border-radius: 4px !important; font-size: 0.9em !important;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace !important;
+}
+
+#ph-htaccessgen .hrg-tool {
+  background: #f0f6fc !important; border: 1px solid #c3d9f5 !important;
+  border-radius: 16px !important; padding: 28px 28px 24px !important; margin: 0 0 40px 0 !important;
+}
+#ph-htaccessgen .hrg-tool-title {
+  font-family: 'DM Serif Display', serif !important; font-size: 32px !important; font-weight: 400 !important;
+  color: #0f2d4a !important; margin: 0 0 6px 0 !important; padding: 0 !important;
+}
+#ph-htaccessgen .hrg-tool-sub { font-size: 18px !important; color: #1a1f2e !important; margin: 0 0 22px 0 !important; }
+
+#ph-htaccessgen .hrg-section-label {
+  font-size: 12px !important; font-weight: 700 !important; letter-spacing: 0.12em !important;
+  text-transform: uppercase !important; color: #1a5f9e !important;
+  margin: 0 0 14px 0 !important; padding: 0 !important; border: none !important; background: none !important; display: block !important;
+}
+#ph-htaccessgen .hrg-form-card {
+  background: #ffffff !important; border: 1px solid #c3d9f5 !important;
+  border-radius: 12px !important; padding: 8px 22px !important; margin-bottom: 16px !important;
+}
+
+#ph-htaccessgen .hrg-switch-row {
+  display: flex !important; align-items: flex-start !important; justify-content: space-between !important;
+  gap: 16px !important; padding: 16px 0 !important; border-bottom: 1px solid #e8f0f8 !important;
+}
+#ph-htaccessgen .hrg-switch-row:last-child { border-bottom: none !important; }
+#ph-htaccessgen .hrg-switch-text { flex: 1 !important; }
+#ph-htaccessgen .hrg-switch-label {
+  font-size: 17px !important; font-weight: 600 !important; color: #0f2d4a !important;
+  margin: 0 0 3px 0 !important; padding: 0 !important; display: block !important;
+}
+#ph-htaccessgen .hrg-switch-desc {
+  font-size: 15px !important; color: #1a1f2e !important; margin: 0 !important; padding: 0 !important; line-height: 1.55 !important;
+}
+
+#ph-htaccessgen .hrg-switch {
+  position: relative !important; display: inline-block !important; width: 46px !important; height: 26px !important;
+  flex-shrink: 0 !important; margin-top: 2px !important;
+}
+#ph-htaccessgen .hrg-switch input { opacity: 0 !important; width: 0 !important; height: 0 !important; position: absolute !important; }
+#ph-htaccessgen .hrg-switch-track {
+  position: absolute !important; cursor: pointer !important; inset: 0 !important;
+  background: #cbd5e1 !important; border-radius: 100px !important; transition: background 0.18s ease !important;
+}
+#ph-htaccessgen .hrg-switch-track::before {
+  content: '' !important; position: absolute !important; height: 20px !important; width: 20px !important;
+  left: 3px !important; top: 3px !important; background: #ffffff !important; border-radius: 50% !important;
+  transition: transform 0.18s ease !important; box-shadow: 0 1px 3px rgba(0,0,0,0.25) !important;
+}
+#ph-htaccessgen .hrg-switch input:checked + .hrg-switch-track { background: #1a5f9e !important; }
+#ph-htaccessgen .hrg-switch input:checked + .hrg-switch-track::before { transform: translateX(20px) !important; }
+#ph-htaccessgen .hrg-switch input:focus-visible + .hrg-switch-track { box-shadow: 0 0 0 3px rgba(26,95,158,0.3) !important; }
+
+#ph-htaccessgen .hrg-subopts {
+  padding: 0 0 16px 0 !important; margin-top: -8px !important; display: none !important;
+}
+#ph-htaccessgen .hrg-subopts.hrg-show { display: block !important; }
+#ph-htaccessgen .hrg-subopt {
+  display: flex !important; align-items: center !important; gap: 8px !important; margin-bottom: 8px !important;
+}
+#ph-htaccessgen .hrg-subopt input { width: 16px !important; height: 16px !important; accent-color: #1a5f9e !important; }
+#ph-htaccessgen .hrg-subopt label { font-size: 14px !important; color: #1a1f2e !important; }
+
+#ph-htaccessgen .hrg-inline-select {
+  padding: 0 0 16px 0 !important; margin-top: -8px !important; display: none !important;
+}
+#ph-htaccessgen .hrg-inline-select.hrg-show { display: block !important; }
+#ph-htaccessgen .hrg-inline-select select {
+  padding: 8px 12px !important; border: 1px solid #c3d9f5 !important; border-radius: 8px !important;
+  font-family: 'DM Sans', sans-serif !important; font-size: 14px !important; color: #1a1f2e !important;
+  background: #ffffff !important;
+}
+#ph-htaccessgen .hrg-switch-row.hrg-switch-row-select { flex-wrap: wrap !important; }
+#ph-htaccessgen .hrg-switch-row.hrg-switch-row-select .hrg-inline-select {
+  flex: 0 0 100% !important; width: 100% !important; margin-top: 4px !important; padding: 0 0 4px 0 !important;
+}
+
+#ph-htaccessgen .hrg-domain-field { margin-bottom: 16px !important; }
+#ph-htaccessgen .hrg-domain-field label {
+  font-size: 15px !important; font-weight: 500 !important; color: #0f2d4a !important; display: block !important; margin-bottom: 6px !important;
+}
+#ph-htaccessgen .hrg-domain-field input {
+  width: 100% !important; padding: 10px 14px !important; border: 1px solid #c3d9f5 !important;
+  border-radius: 8px !important; font-family: 'DM Sans', sans-serif !important;
+  font-size: 16px !important; color: #1a1f2e !important; background: #ffffff !important; outline: none !important;
+}
+#ph-htaccessgen .hrg-domain-field .hrg-hint { font-size: 13px !important; color: #1a1f2e !important; margin-top: 5px !important; display: block !important; }
+
+#ph-htaccessgen .hrg-tabs { display: flex !important; gap: 8px !important; margin: 24px 0 14px 0 !important; }
+#ph-htaccessgen .hrg-tab {
+  background: #ffffff !important; border: 1px solid #c3d9f5 !important; color: #1a5f9e !important;
+  border-radius: 8px !important; padding: 9px 18px !important; font-family: 'DM Sans', sans-serif !important;
+  font-size: 15px !important; font-weight: 600 !important; cursor: pointer !important; transition: all 0.15s ease !important;
+}
+#ph-htaccessgen .hrg-tab.hrg-tab-active { background: #0f2d4a !important; border-color: #0f2d4a !important; color: #ffffff !important; }
+
+#ph-htaccessgen .hrg-code-wrap { border-radius: 12px !important; overflow: hidden !important; margin-bottom: 8px !important; }
+#ph-htaccessgen .hrg-code-toolbar {
+  background: #0a1e33 !important; padding: 10px 18px !important; display: flex !important;
+  align-items: center !important; justify-content: space-between !important;
+}
+#ph-htaccessgen .hrg-code-filename {
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 13px !important; color: rgba(255,255,255,0.55) !important;
+}
+#ph-htaccessgen .hrg-copy-btn {
+  background: #1a5f9e !important; color: #ffffff !important; border: none !important;
+  border-radius: 6px !important; padding: 6px 14px !important; font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important; font-weight: 600 !important; cursor: pointer !important; transition: background 0.15s ease !important;
+}
+#ph-htaccessgen .hrg-copy-btn:hover { background: #f4a629 !important; }
+#ph-htaccessgen .hrg-copy-btn.hrg-copied { background: #16a34a !important; }
+#ph-htaccessgen .hrg-code {
+  background: #0f2d4a !important; color: #e2eefb !important; margin: 0 !important;
+  padding: 20px !important; overflow-x: auto !important; font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 15px !important; line-height: 1.65 !important; white-space: pre !important;
+}
+#ph-htaccessgen .hrg-code::-webkit-scrollbar { height: 8px !important; }
+#ph-htaccessgen .hrg-code::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2) !important; border-radius: 4px !important; }
+
+#ph-htaccessgen .hrg-callout {
+  background: #f0f6fc !important; border-left: 4px solid #3b9dd4 !important;
+  border-radius: 0 12px 12px 0 !important; padding: 18px 22px !important;
+  display: flex !important; gap: 14px !important; align-items: baseline !important; margin: 28px 0 !important;
+}
+#ph-htaccessgen .hrg-callout-icon { font-size: 22px !important; flex-shrink: 0 !important; line-height: 1.3 !important; }
+#ph-htaccessgen .hrg-callout-body { font-size: 17px !important; color: #1a1f2e !important; line-height: 1.7 !important; }
+#ph-htaccessgen .hrg-callout-body strong:first-child {
+  display: block !important; font-size: 19px !important; color: #0f2d4a !important;
+  margin: 0 0 10px 0 !important; line-height: 1.3 !important;
+}
+
+#ph-htaccessgen .hrg-linkbox {
+  background: #f0f6fc !important; border: 1px solid #c3d9f5 !important;
+  border-radius: 12px !important; padding: 20px 22px !important;
+  margin: 24px 0 !important; display: flex !important; gap: 14px !important; align-items: flex-start !important;
+}
+#ph-htaccessgen .hrg-linkbox-icon { font-size: 22px !important; flex-shrink: 0 !important; line-height: 1.3 !important; }
+#ph-htaccessgen .hrg-linkbox-title { font-weight: 700 !important; color: #0f2d4a !important; font-size: 17px !important; margin: 0 0 6px 0 !important; }
+#ph-htaccessgen .hrg-linkbox-desc { font-size: 15px !important; color: #1a1f2e !important; line-height: 1.6 !important; margin: 0 0 12px 0 !important; }
+#ph-htaccessgen .hrg-linkbox-row { display: flex !important; gap: 10px !important; flex-wrap: wrap !important; }
+#ph-htaccessgen .hrg-linkbox-btn {
+  background: #1a5f9e !important; color: #ffffff !important; border: none !important;
+  border-radius: 6px !important; padding: 8px 14px !important; font-family: 'DM Sans', sans-serif !important;
+  font-size: 13px !important; font-weight: 600 !important; cursor: pointer !important; transition: background 0.15s ease !important;
+}
+#ph-htaccessgen .hrg-linkbox-btn:hover { background: #f4a629 !important; }
+#ph-htaccessgen .hrg-linkbox-btn.hrg-copied2 { background: #16a34a !important; }
+
+#ph-htaccessgen .hrg-citebox {
+  background: #fffbeb !important; border: 1px solid #f6d860 !important; border-left: 4px solid #f4a629 !important;
+  border-radius: 0 12px 12px 0 !important; padding: 18px 20px !important; margin: 28px 0 0 0 !important;
+}
+#ph-htaccessgen .hrg-citebox-title {
+  font-weight: 700 !important; color: #0f2d4a !important; font-size: 13px !important;
+  margin: 0 0 8px 0 !important; text-transform: uppercase !important; letter-spacing: 0.04em !important;
+}
+#ph-htaccessgen .hrg-citebox-text { font-size: 15px !important; color: #1a1f2e !important; line-height: 1.6 !important; margin: 0 0 12px 0 !important; font-style: italic !important; }
+#ph-htaccessgen .hrg-citebox-text a { color: #1a5f9e !important; font-style: normal !important; }
+#ph-htaccessgen .hrg-citebox-row { display: flex !important; gap: 10px !important; flex-wrap: wrap !important; }
+#ph-htaccessgen .hrg-citebox-btn {
+  background: #1a5f9e !important; color: #ffffff !important; border: none !important;
+  border-radius: 6px !important; padding: 8px 14px !important; font-family: 'DM Sans', sans-serif !important;
+  font-size: 13px !important; font-weight: 600 !important; cursor: pointer !important; transition: background 0.15s ease !important;
+}
+#ph-htaccessgen .hrg-citebox-btn:hover { background: #f4a629 !important; }
+#ph-htaccessgen .hrg-citebox-btn.hrg-copied2 { background: #16a34a !important; }
+
+#ph-htaccessgen .hrg-features-grid { display: flex !important; flex-direction: column !important; gap: 16px !important; margin: 24px 0 0 0 !important; }
+#ph-htaccessgen .hrg-feature-card {
+  background: #f0f6fc !important; border: 1px solid #c3d9f5 !important;
+  border-radius: 12px !important; padding: 22px 22px 18px !important;
+  position: relative !important; overflow: hidden !important;
+  display: flex !important; gap: 16px !important; align-items: flex-start !important;
+}
+#ph-htaccessgen .hrg-feature-card::before {
+  content: '' !important; position: absolute !important; top: 0 !important; left: 0 !important;
+  width: 4px !important; height: 100% !important;
+  background: linear-gradient(180deg, #f4a629, #0f2d4a) !important;
+  border-radius: 4px 0 0 4px !important;
+}
+#ph-htaccessgen .hrg-feature-icon { font-size: 26px !important; flex-shrink: 0 !important; line-height: 1 !important; margin-top: 2px !important; }
+#ph-htaccessgen .hrg-feature-body { flex: 1 !important; }
+#ph-htaccessgen .hrg-feature-title {
+  font-family: 'DM Sans', sans-serif !important; font-size: 20px !important;
+  font-weight: 700 !important; color: #0f2d4a !important;
+  margin: 0 0 5px 0 !important; padding: 0 !important; border: none !important; background: none !important;
+}
+#ph-htaccessgen .hrg-feature-desc { font-size: 18px !important; color: #1a1f2e !important; margin: 0 !important; padding: 0 !important; line-height: 1.65 !important; }
+
+#ph-htaccessgen .hrg-faq { margin: 24px 0 !important; }
+#ph-htaccessgen .hrg-faq-item {
+  border: 1px solid #e5e7eb !important; border-radius: 10px !important;
+  margin-bottom: 10px !important; overflow: hidden !important;
+}
+#ph-htaccessgen .hrg-faq-q {
+  width: 100% !important; background: none !important; border: none !important;
+  padding: 17px 20px !important; text-align: left !important;
+  font-family: 'DM Sans', sans-serif !important; font-size: 19px !important;
+  font-weight: 600 !important; color: #0f2d4a !important;
+  cursor: pointer !important; display: flex !important;
+  justify-content: space-between !important; align-items: center !important; gap: 12px !important;
+}
+#ph-htaccessgen .hrg-faq-icon {
+  font-size: 21px !important; font-weight: 300 !important; color: #1a5f9e !important;
+  flex-shrink: 0 !important; transition: transform 0.2s ease !important; display: inline-block !important;
+}
+#ph-htaccessgen .hrg-faq-item.hrg-open .hrg-faq-icon { transform: rotate(45deg) !important; }
+#ph-htaccessgen .hrg-faq-a {
+  display: none !important; padding: 14px 20px 18px 20px !important;
+  font-size: 19px !important; color: #1a1f2e !important; line-height: 1.75 !important;
+  margin: 0 !important; border-top: 1px solid #e5e7eb !important; background: none !important;
+}
+#ph-htaccessgen .hrg-faq-q{background:#f9fafb !important;transition:background .15s !important}#ph-htaccessgen .hrg-faq-q:hover{background:#e6f0fa !important}body #ph-htaccessgen > h2{padding-bottom:12px !important;border-bottom:2px solid #cbd5e0 !important}#ph-htaccessgen .hrg-faq-item.hrg-open .hrg-faq-a { display: block !important; }
+
+#ph-htaccessgen .hrg-divider { border: none !important; border-top: 1px solid #e5e7eb !important; margin: 44px 0 !important; }
+
+#ph-htaccessgen .hrg-conclusion {
+  background: linear-gradient(135deg, #0d1f33 0%, #0e3460 100%) !important;
+  border-radius: 16px !important; padding: 44px 44px !important; margin: 52px 0 0 0 !important;
+}
+#ph-htaccessgen .hrg-conclusion h2 {
+  font-family: 'DM Serif Display', serif !important; font-size: 30px !important;
+  font-weight: 400 !important; color: #ffffff !important; text-align: center !important;
+  margin: 0 0 24px 0 !important; padding: 0 !important; border: none !important;
+  max-width: 100% !important;
+}
+#ph-htaccessgen .hrg-conclusion p {
+  font-size: 18px !important; color: rgba(255,255,255,0.85) !important;
+  line-height: 1.8 !important; margin: 0 0 16px !important;
+  text-align: left !important;
+}
+#ph-htaccessgen .hrg-conclusion p:last-child {
+  text-align: center !important; width: 100% !important;
+  margin-top: 28px !important; padding-top: 24px !important;
+  border-top: 1px solid rgba(255,255,255,0.12) !important; margin-bottom: 0 !important;
+}
+#ph-htaccessgen .hrg-conclusion strong { color: #f4a629 !important; }
+
+@media (max-width: 700px) {
+  #ph-htaccessgen .hrg-hero { padding: 40px 24px !important; }
+  #ph-htaccessgen .hrg-conclusion { padding: 30px 24px !important; }
+}
+@media (max-width: 600px) {
+  #ph-htaccessgen .hrg-tool { padding: 22px 18px !important; }
+  #ph-htaccessgen .hrg-switch-row { flex-wrap: wrap !important; }
+  #ph-htaccessgen .hrg-code { font-size: 12.5px !important; }
+}
+@media (min-width:1400px){#ph-htaccessgen{font-size:22px !important}#ph-htaccessgen .hrg-hero h1{font-size:clamp(36px,5vw,58px) !important}#ph-htaccessgen .hrg-eyebrow{font-size:14px !important}#ph-htaccessgen .hrg-subtitle{font-size:20px !important}#ph-htaccessgen .hrg-badge{font-size:14px !important}#ph-htaccessgen .hrg-intro{font-size:20px !important}#ph-htaccessgen .hrg-subhead{font-size:21px !important}#ph-htaccessgen .hrg-tool-title{font-size:36px !important}#ph-htaccessgen .hrg-tool-sub{font-size:19px !important}#ph-htaccessgen .hrg-section-label{font-size:13px !important}#ph-htaccessgen .hrg-switch-label{font-size:18px !important}#ph-htaccessgen .hrg-switch-desc{font-size:16px !important}#ph-htaccessgen .hrg-subopt label{font-size:15px !important}#ph-htaccessgen .hrg-inline-select select{font-size:15px !important}#ph-htaccessgen .hrg-domain-field label{font-size:16px !important}#ph-htaccessgen .hrg-domain-field input{font-size:17px !important}#ph-htaccessgen .hrg-domain-field .hrg-hint{font-size:14px !important}#ph-htaccessgen .hrg-tab{font-size:16px !important}#ph-htaccessgen .hrg-code-filename{font-size:14px !important}#ph-htaccessgen .hrg-copy-btn{font-size:15px !important}#ph-htaccessgen .hrg-code{font-size:16px !important}#ph-htaccessgen .hrg-callout-icon{font-size:24px !important}#ph-htaccessgen .hrg-callout-body{font-size:18px !important}#ph-htaccessgen .hrg-callout-body strong:first-child{font-size:20px !important}#ph-htaccessgen .hrg-linkbox-icon{font-size:23px !important}#ph-htaccessgen .hrg-linkbox-title{font-size:18px !important}#ph-htaccessgen .hrg-linkbox-desc{font-size:16px !important}#ph-htaccessgen .hrg-linkbox-btn{font-size:14px !important}#ph-htaccessgen .hrg-citebox-title{font-size:14px !important}#ph-htaccessgen .hrg-citebox-text{font-size:16px !important}#ph-htaccessgen .hrg-citebox-btn{font-size:14px !important}#ph-htaccessgen .hrg-feature-icon{font-size:28px !important}#ph-htaccessgen .hrg-feature-title{font-size:21px !important}#ph-htaccessgen .hrg-feature-desc{font-size:19px !important}#ph-htaccessgen .hrg-faq-q{font-size:20px !important}#ph-htaccessgen .hrg-faq-icon{font-size:22px !important}#ph-htaccessgen .hrg-faq-a{font-size:20px !important}#ph-htaccessgen .hrg-conclusion h2{font-size:34px !important}}
+/* ---------- v2 additions: presets, groups, extra controls, output actions ---------- */
+#ph-htaccessgen .hrg-presets { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; margin: 0 0 18px 0 !important; align-items: center !important; }
+#ph-htaccessgen .hrg-presets-label { font-size: 13px !important; font-weight: 700 !important; color: #1a5f9e !important; letter-spacing: 0.08em !important; text-transform: uppercase !important; margin-right: 4px !important; }
+#ph-htaccessgen .hrg-preset {
+  background: #ffffff !important; border: 1px solid #c3d9f5 !important; color: #0f2d4a !important;
+  border-radius: 100px !important; padding: 7px 16px !important; font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important; font-weight: 600 !important; cursor: pointer !important; line-height: 1.3 !important;
+  transition: all 0.15s ease !important;
+}
+#ph-htaccessgen .hrg-preset:hover { border-color: #1a5f9e !important; }
+#ph-htaccessgen .hrg-preset.hrg-preset-active { background: #0f2d4a !important; border-color: #0f2d4a !important; color: #ffffff !important; }
+
+#ph-htaccessgen details.hrg-group {
+  background: #ffffff !important; border: 1px solid #c3d9f5 !important; border-radius: 12px !important;
+  margin: 0 0 12px 0 !important; padding: 0 !important; overflow: hidden !important;
+}
+#ph-htaccessgen details.hrg-group > summary {
+  list-style: none !important; cursor: pointer !important; padding: 14px 22px !important;
+  display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 12px !important;
+  font-size: 17px !important; font-weight: 700 !important; color: #0f2d4a !important; margin: 0 !important;
+}
+#ph-htaccessgen details.hrg-group > summary::-webkit-details-marker { display: none !important; }
+#ph-htaccessgen details.hrg-group > summary::marker { content: '' !important; }
+#ph-htaccessgen .hrg-group-meta { display: flex !important; align-items: center !important; gap: 10px !important; }
+#ph-htaccessgen .hrg-group-count {
+  font-size: 12px !important; font-weight: 600 !important; color: #1a5f9e !important;
+  background: #eef4fb !important; border-radius: 100px !important; padding: 3px 10px !important; white-space: nowrap !important;
+}
+#ph-htaccessgen .hrg-group-chev { font-size: 20px !important; font-weight: 300 !important; color: #1a5f9e !important; transition: transform 0.2s ease !important; display: inline-block !important; }
+#ph-htaccessgen details.hrg-group[open] .hrg-group-chev { transform: rotate(45deg) !important; }
+#ph-htaccessgen .hrg-group-body { padding: 0 22px 6px 22px !important; border-top: 1px solid #e8f0f8 !important; }
+
+#ph-htaccessgen .hrg-subopt-note { font-size: 13px !important; color: #475569 !important; margin: -4px 0 8px 24px !important; line-height: 1.5 !important; }
+#ph-htaccessgen .hrg-textarea-wrap { padding: 0 0 16px 0 !important; margin-top: -8px !important; display: none !important; }
+#ph-htaccessgen .hrg-textarea-wrap.hrg-show { display: block !important; }
+#ph-htaccessgen .hrg-textarea-wrap textarea {
+  width: 100% !important; min-height: 110px !important; padding: 10px 12px !important; border: 1px solid #c3d9f5 !important;
+  border-radius: 8px !important; font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 13.5px !important; line-height: 1.55 !important; color: #1a1f2e !important; background: #ffffff !important; resize: vertical !important;
+}
+#ph-htaccessgen .hrg-textarea-status { font-size: 13px !important; color: #475569 !important; margin-top: 6px !important; display: block !important; }
+#ph-htaccessgen .hrg-textarea-status.hrg-warn { color: #b45309 !important; }
+
+#ph-htaccessgen .hrg-tabs { flex-wrap: wrap !important; }
+#ph-htaccessgen .hrg-tab[hidden] { display: none !important; }
+#ph-htaccessgen .hrg-code-toolbar { flex-wrap: wrap !important; gap: 8px !important; }
+#ph-htaccessgen .hrg-code-actions { display: flex !important; gap: 8px !important; flex-wrap: wrap !important; }
+#ph-htaccessgen .hrg-copy-btn.hrg-ghost { background: transparent !important; border: 1px solid rgba(255,255,255,0.35) !important; }
+#ph-htaccessgen .hrg-copy-btn.hrg-ghost:hover { background: #f4a629 !important; border-color: #f4a629 !important; }
+#ph-htaccessgen .hrg-output-note { font-size: 14px !important; color: #475569 !important; margin: 6px 0 0 0 !important; line-height: 1.55 !important; }
+@media (max-width: 600px) {
+  #ph-htaccessgen details.hrg-group > summary { padding: 13px 16px !important; font-size: 16px !important; }
+  #ph-htaccessgen .hrg-group-body { padding: 0 16px 6px 16px !important; }
+  #ph-htaccessgen .hrg-preset { padding: 6px 12px !important; font-size: 13px !important; }
+}
+#ph-htaccessgen .hrg-switch-row.hrg-switch-row-select .hrg-textarea-wrap { flex: 0 0 100% !important; width: 100% !important; margin-top: 4px !important; }
+#ph-htaccessgen .hrg-inline-select select { max-width: 100% !important; width: auto !important; }
+#ph-htaccessgen .hrg-code { max-height: 560px !important; overflow: auto !important; }
+#ph-htaccessgen .hrg-callout-body strong:first-child { display: block !important; margin-bottom: 8px !important; }
+#ph-htaccessgen .hrg-callout-body p:last-child { margin-bottom: 0 !important; }
+#ph-htaccessgen .hrg-redir-type-row { display: flex !important; align-items: center !important; gap: 10px !important; flex-wrap: wrap !important; margin: 0 0 10px 0 !important; }
+#ph-htaccessgen .hrg-redir-type-row label { font-size: 15px !important; color: #1a1f2e !important; font-weight: 500 !important; }
+#ph-htaccessgen .hrg-redir-type-row select, #ph-htaccessgen .hrg-err-row input {
+  padding: 8px 12px !important; border: 1px solid #c3d9f5 !important; border-radius: 8px !important;
+  font-family: 'DM Sans', sans-serif !important; font-size: 15px !important; color: #1a1f2e !important; background: #ffffff !important; max-width: 100% !important;
+}
+#ph-htaccessgen .hrg-err-row { display: flex !important; align-items: center !important; gap: 10px !important; margin-bottom: 8px !important; }
+#ph-htaccessgen .hrg-err-row label { flex: 0 0 130px !important; font-size: 15px !important; color: #1a1f2e !important; }
+#ph-htaccessgen .hrg-err-row input { flex: 1 1 auto !important; min-width: 0 !important; font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace !important; font-size: 14px !important; }
+#ph-htaccessgen .hrg-errors-note { margin-left: 0 !important; }
+#ph-htaccessgen #hrg-auth-status { margin: 0 0 8px 0 !important; }
+#ph-htaccessgen #hrg-auth-status:empty { display: none !important; }
+#ph-htaccessgen .hrg-botlist { margin: 2px 0 12px 24px !important; border: 1px solid #dbe7f3 !important; border-radius: 8px !important; background: #f8fbff !important; }
+#ph-htaccessgen .hrg-botlist > summary { cursor: pointer !important; padding: 9px 12px !important; font-size: 15px !important; font-weight: 600 !important; color: #1a5f9e !important; }
+#ph-htaccessgen .hrg-botlist-head { font-size: 14px !important; font-weight: 600 !important; color: #0f2d4a !important; margin: 10px 12px 6px 12px !important; }
+#ph-htaccessgen .hrg-botlist-grid { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)) !important; gap: 4px 14px !important; padding: 0 12px 8px 12px !important; }
+#ph-htaccessgen .hrg-bot { display: flex !important; align-items: baseline !important; flex-wrap: nowrap !important; gap: 8px !important; font-size: 14px !important; color: #1a1f2e !important; cursor: pointer !important; line-height: 1.5 !important; }
+#ph-htaccessgen .hrg-bot input { width: 15px !important; height: 15px !important; accent-color: #1a5f9e !important; flex: 0 0 auto !important; position: relative !important; top: 2px !important; }
+#ph-htaccessgen .hrg-bot-text { min-width: 0 !important; overflow-wrap: anywhere !important; }
+#ph-htaccessgen .hrg-bot-name { font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace !important; font-size: 13px !important; }
+#ph-htaccessgen .hrg-bot-meta { color: #64748b !important; font-size: 13px !important; }
+#ph-htaccessgen .hrg-bot-off { opacity: 0.45 !important; cursor: default !important; }
+@media (max-width: 600px) {
+  #ph-htaccessgen .hrg-botlist { margin-left: 0 !important; }
+  #ph-htaccessgen .hrg-err-row label { flex-basis: 100px !important; font-size: 14px !important; }
+}
+@media (max-width: 600px) {
+  #ph-htaccessgen .hrg-inline-select select { width: 100% !important; font-size: 13px !important; }
+  #ph-htaccessgen .hrg-code { max-height: 460px !important; }
+}
+</style>
+
+<style>/* cite-text-size */body #ph-htaccessgen .hrg-citebox .hrg-citebox-title{font-size:14px !important}body #ph-htaccessgen .hrg-citebox .hrg-citebox-text{font-size:17px !important;line-height:1.65 !important}body #ph-htaccessgen .hrg-citebox .hrg-citebox-btn{font-size:15px !important}@media (min-width:1400px){body #ph-htaccessgen .hrg-citebox .hrg-citebox-text{font-size:18px !important}}</style><style>/* badge-size-fix */body #ph-htaccessgen .hrg-badge{font-size:12px !important;padding:5px 14px !important}@media (min-width:1400px){body #ph-htaccessgen .hrg-badge{font-size:15px !important}}</style><style>/* hrg-faq-font */body #ph-htaccessgen .hrg-faq-q{font-size:18px !important}body #ph-htaccessgen .hrg-faq-a{font-size:18px !important}body #ph-htaccessgen .hrg-faq-icon{font-size:20px !important}</style><style>/* tool-text-sizes */body #ph-htaccessgen>p,body #ph-htaccessgen>ul>li,body #ph-htaccessgen>ol>li{font-size:18px !important}body #ph-htaccessgen .hrg-intro{font-size:18px !important}body #ph-htaccessgen .hrg-feature-desc{font-size:17px !important}@media (min-width:1400px){body #ph-htaccessgen .hrg-intro{font-size:20px !important}}</style><style>/* tool-text-tv */@media (min-width:1400px){body #ph-htaccessgen>p,body #ph-htaccessgen>ul>li,body #ph-htaccessgen>ol>li{font-size:20px !important}body #ph-htaccessgen .hrg-callout-body,body #ph-htaccessgen .hrg-callout-body p{font-size:17px !important}}</style><style>/* faq-icon-bold */body #ph-htaccessgen .hrg-faq-icon{font-size:24px !important;font-weight:600 !important;line-height:1 !important}</style><style>/* faq-tv-20 */@media (min-width:1400px){body #ph-htaccessgen .hrg-faq-q,body #ph-htaccessgen .hrg-faq-a{font-size:20px !important}}</style>
+</head>
+<body>
+<!-- Local copy of the generator. The maintained version: https://www.paidhosting.com/htaccess-nginx-generator/ -->
+<div id="ph-htaccessgen">
+
+  <div class="hrg-hero">
+    <span class="hrg-eyebrow">Free Hosting Tool</span>
+    <h1>.htaccess, Nginx &amp; Caddy Rule Generator</h1>
+    <p class="hrg-subtitle">Pick a preset or flip the switches &#8212; force HTTPS, fix www and trailing slashes, bulk redirects, security headers, AI crawler blocking, caching &#8212; and copy correctly-ordered code for Apache, LiteSpeed, Nginx, Caddy or Cloudflare. No regex required.</p>
+    <div class="hrg-hero-meta">
+      <span class="hrg-badge">&#x2699;&#xFE0F; Apache, LiteSpeed, Nginx, Caddy &amp; Cloudflare</span>
+      
+      
+      <span class="hrg-badge">&#x1F6E1;&#xFE0F; AI crawler blocking</span>
+      <span class="hrg-badge">&#x1F517; Shareable config links</span>
+    </div>
+  </div>
+
+  <p class="hrg-intro">Writing rewrite rules by hand is where most small mistakes happen &#8212; a missing flag, the wrong rule order, a redirect chain that adds an extra hop, or a regex that works for Apache but does nothing on Nginx (which never reads a <code>.htaccess</code> file at all). This generator builds correct, ready-to-paste code for four servers plus Cloudflare, updates live as you toggle options, and gives you a link to the exact configuration so you can save it or share it.</p>
+
+  <div class="hrg-tool">
+    <div class="hrg-tool-title">Build your rules</div>
+    <p class="hrg-tool-sub">Start from a preset, then fine-tune. The code below updates instantly.</p>
+
+    <div class="hrg-presets" role="group" aria-label="Presets">
+      <span class="hrg-presets-label">Preset</span>
+      <button type="button" class="hrg-preset" data-preset="wp">WordPress</button>
+      <button type="button" class="hrg-preset" data-preset="wphard">WordPress (hardened)</button>
+      <button type="button" class="hrg-preset" data-preset="laravel">Laravel / PHP app</button>
+      <button type="button" class="hrg-preset" data-preset="static">Static site</button>
+    </div>
+
+    <!-- ===== Group 1: Redirects ===== -->
+    <details class="hrg-group" open>
+      <summary>Redirects <span class="hrg-group-meta"><span class="hrg-group-count" id="hrg-count-redir"></span><span class="hrg-group-chev">+</span></span></summary>
+      <div class="hrg-group-body">
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Force HTTPS</span>
+            <p class="hrg-switch-desc">Redirect every plain HTTP request to HTTPS with a permanent (301) redirect.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-https"><span class="hrg-switch-track"></span></label>
+        </div>
+
+        <div class="hrg-switch-row hrg-switch-row-select">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Canonical www</span>
+            <p class="hrg-switch-desc">Pick www or non-www so only one is indexed. Combined with HTTPS into a single redirect &#8212; no chains.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-www"><span class="hrg-switch-track"></span></label>
+          <div class="hrg-inline-select" id="hrg-www-opts">
+            <select id="hrg-www-mode" aria-label="Canonical www mode">
+              <option value="strip">Redirect www.example.com &#8594; example.com (remove www)</option>
+              <option value="force">Redirect example.com &#8594; www.example.com (force www)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hrg-switch-row hrg-switch-row-select">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Trailing slash</span>
+            <p class="hrg-switch-desc">Enforce one URL format. Leave off for WordPress &#8212; it already follows your permalink setting.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-trail"><span class="hrg-switch-track"></span></label>
+          <div class="hrg-inline-select" id="hrg-trail-opts">
+            <select id="hrg-trail-mode" aria-label="Trailing slash mode">
+              <option value="remove">Remove trailing slash (/page/ &#8594; /page)</option>
+              <option value="add">Add trailing slash (/page &#8594; /page/)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hrg-switch-row hrg-switch-row-select">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Remove .php / .html from URLs</span>
+            <p class="hrg-switch-desc">Turn <code>/about.php</code> into <code>/about</code>. Old links redirect to the clean address, and the clean address still opens your file. For hand-built PHP and static sites; WordPress and most frameworks already have clean URLs.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-noext"><span class="hrg-switch-track"></span></label>
+          <div class="hrg-inline-select" id="hrg-noext-opts">
+            <select id="hrg-noext-mode" aria-label="Which extensions to remove">
+              <option value="php">.php pages (/about.php &#8594; /about)</option>
+              <option value="html">.html pages (/about.html &#8594; /about)</option>
+              <option value="both">Both .php and .html pages</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hrg-switch-row hrg-switch-row-select">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Bulk redirects</span>
+            <p class="hrg-switch-desc">Paste old and new URLs, one pair per line. Chains are shortened automatically, so every old URL goes straight to its final address in one hop.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-redir"><span class="hrg-switch-track"></span></label>
+          <div class="hrg-textarea-wrap" id="hrg-redir-opts">
+            <div class="hrg-redir-type-row"><label for="hrg-redir-type">Redirect type</label><select id="hrg-redir-type"><option value="301">301 permanent (moved for good)</option><option value="302">302 temporary (moving back later)</option></select></div>
+            <textarea id="hrg-redir-text" spellcheck="false" aria-label="Redirects, one per line" placeholder="/old-page /new-page&#10;/blog/old-post/ /blog/new-post/&#10;/pricing.html https://example.com/plans/"></textarea>
+            <span class="hrg-textarea-status" id="hrg-redir-status">Separate old and new with a space, tab or comma. Full URLs work too.</span>
+          </div>
+        </div>
+
+        <div class="hrg-switch-row hrg-switch-row-select">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Move from an old domain</span>
+            <p class="hrg-switch-desc">Moving to a new domain? Every page on the old domain goes to the same page on your domain, in one hop. Pages you renamed in Bulk redirects go straight to their new address.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-move"><span class="hrg-switch-track"></span></label>
+          <div class="hrg-inline-select" id="hrg-move-opts">
+            <div class="hrg-err-row"><label for="hrg-move-from">Old domain</label><input type="text" id="hrg-move-from" value="" placeholder="old-site.com" spellcheck="false" autocomplete="off"></div>
+            <p class="hrg-subopt-note hrg-errors-note">Your new domain is the one in &#8220;Your domain&#8221; below.</p>
+          </div>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Custom error pages</span>
+            <p class="hrg-switch-desc">Show your own page instead of the server&#8217;s plain default for 404, 403 and 500 errors. Leave a box empty to skip it.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-errors"><span class="hrg-switch-track"></span></label>
+        </div>
+        <div class="hrg-subopts" id="hrg-errors-opts">
+          <div class="hrg-err-row"><label for="hrg-err-404">404 Not found</label><input type="text" id="hrg-err-404" value="/404.html" placeholder="/404.html" spellcheck="false"></div>
+          <div class="hrg-err-row"><label for="hrg-err-403">403 Forbidden</label><input type="text" id="hrg-err-403" value="" placeholder="/403.html" spellcheck="false"></div>
+          <div class="hrg-err-row"><label for="hrg-err-500">500 Server error</label><input type="text" id="hrg-err-500" value="" placeholder="/500.html" spellcheck="false"></div>
+          <p class="hrg-subopt-note hrg-errors-note">Paths to pages on your own site. WordPress themes already show their own 404 page, so leave that box empty on WordPress.</p>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- ===== Group 2: Security ===== -->
+    <details class="hrg-group">
+      <summary>Security &amp; bots <span class="hrg-group-meta"><span class="hrg-group-count" id="hrg-count-sec"></span><span class="hrg-group-chev">+</span></span></summary>
+      <div class="hrg-group-body">
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Security headers</span>
+            <p class="hrg-switch-desc">X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, plus HSTS when Force HTTPS is on.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-headers"><span class="hrg-switch-track"></span></label>
+        </div>
+        <div class="hrg-subopts" id="hrg-headers-opts">
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-preload"><label for="hrg-preload">HSTS preload (2-year max-age, <code>includeSubDomains</code> and <code>preload</code>)</label></div>
+          <p class="hrg-subopt-note">Forces HTTPS on every subdomain, so only tick it if they all have a certificate. Preloading is hard to undo &#8212; submit at hstspreload.org when ready.</p>
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-csp"><label for="hrg-csp">Content-Security-Policy starter (report-only)</label></div>
+          <p class="hrg-subopt-note">Report-only mode logs violations in the browser console without blocking anything, so it can't break your site.</p>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Block AI crawlers</span>
+            <p class="hrg-switch-desc">GPTBot, ClaudeBot, CCBot, Bytespider, Meta and more &#8212; plus a matching <code class="phc">robots.txt</code>. Pick whole groups or individual bots.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-ai"><span class="hrg-switch-track"></span></label>
+        </div>
+        <div class="hrg-subopts" id="hrg-ai-opts">
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-ai-train"><label for="hrg-ai-train">AI training crawlers (GPTBot, ClaudeBot, CCBot, Bytespider, meta-externalagent&#8230;)</label></div>
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-ai-search"><label for="hrg-ai-search">AI search &amp; assistant fetchers (OAI-SearchBot, ChatGPT-User, PerplexityBot, Claude-User&#8230;)</label></div>
+          <p class="hrg-subopt-note">Blocking search fetchers also removes your pages from AI answers and their citations.</p>
+          <div id="hrg-ai-bots"></div>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Block bad bots</span>
+            <p class="hrg-switch-desc">Return a 403 to SEO crawlers, vulnerability scanners and scripted traffic. Each group is a separate choice.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-bots"><span class="hrg-switch-track"></span></label>
+        </div>
+        <div class="hrg-subopts" id="hrg-bots-opts">
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-bots-seo"><label for="hrg-bots-seo">SEO / marketing crawlers (AhrefsBot, SemrushBot, MJ12bot, DotBot&#8230;)</label></div>
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-bots-scan"><label for="hrg-bots-scan">Vulnerability scanners (nikto, sqlmap, nmap, masscan, zgrab)</label></div>
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-bots-lib"><label for="hrg-bots-lib">Scripting tools &amp; empty user-agents (python-requests, Go-http-client, libwww-perl)</label></div>
+          <p class="hrg-subopt-note">Scripting tools are also used by uptime monitors, webhooks and integrations. Check that none of yours rely on them first.</p>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Protect sensitive files</span>
+            <p class="hrg-switch-desc">Deny <code>.env</code>, <code>.git</code>, other dotfiles, backups, SQL dumps and logs. Keeps <code>.well-known</code> open for SSL.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-protect"><span class="hrg-switch-track"></span></label>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Disable directory listing</span>
+            <p class="hrg-switch-desc">Stop the server showing a file list for folders without an index page.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-dirlist"><span class="hrg-switch-track"></span></label>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">WordPress hardening</span>
+            <p class="hrg-switch-desc">Lock down the files and URLs attackers probe first on WordPress sites.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-wp"><span class="hrg-switch-track"></span></label>
+        </div>
+        <div class="hrg-subopts" id="hrg-wp-opts">
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-wp-xmlrpc"><label for="hrg-wp-xmlrpc">Block xmlrpc.php (breaks Jetpack and some remote-publishing apps)</label></div>
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-wp-config"><label for="hrg-wp-config">Deny direct access to wp-config.php</label></div>
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-wp-uploads"><label for="hrg-wp-uploads">Block PHP execution in wp-content/uploads</label></div>
+          <div class="hrg-subopt"><input type="checkbox" id="hrg-wp-author"><label for="hrg-wp-author">Block ?author= username scans (wp-admin unaffected)</label></div>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Password-protect a folder</span>
+            <p class="hrg-switch-desc">Ask for a username and password before anyone can open a folder, such as a staging copy or admin area, or the whole site.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-auth"><span class="hrg-switch-track"></span></label>
+        </div>
+        <div class="hrg-subopts" id="hrg-auth-opts">
+          <div class="hrg-err-row"><label for="hrg-auth-folder">Folder</label><input type="text" id="hrg-auth-folder" value="/staging/" placeholder="/staging/" spellcheck="false" autocomplete="off"></div>
+          <div class="hrg-err-row"><label for="hrg-auth-user">Username</label><input type="text" id="hrg-auth-user" value="" placeholder="admin" spellcheck="false" autocomplete="off"></div>
+          <div class="hrg-err-row"><label for="hrg-auth-pass">Password</label><input type="password" id="hrg-auth-pass" value="" autocomplete="new-password"></div>
+          <div class="hrg-err-row"><label for="hrg-auth-file">Password file</label><input type="text" id="hrg-auth-file" value="/home/youruser/.htpasswd" spellcheck="false" autocomplete="off"></div>
+          <span class="hrg-textarea-status" id="hrg-auth-status"></span>
+          <p class="hrg-subopt-note hrg-errors-note">Use <code>/</code> to protect the whole site. The password file is where Apache and Nginx look for your login; keep it outside your public web folder.</p>
+        </div>
+
+        <div class="hrg-switch-row hrg-switch-row-select">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Block IP addresses</span>
+            <p class="hrg-switch-desc">Return a 403 to specific IP addresses or ranges, such as a scraper or attacker you&#8217;ve spotted in your logs.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-ipblock"><span class="hrg-switch-track"></span></label>
+          <div class="hrg-textarea-wrap" id="hrg-ipblock-opts">
+            <textarea id="hrg-ip-text" spellcheck="false" aria-label="IP addresses to block, one per line" placeholder="203.0.113.7&#10;198.51.100.0/24&#10;2001:db8::/32"></textarea>
+            <span class="hrg-textarea-status" id="hrg-ip-status">One IP address or range (CIDR) per line, IPv4 or IPv6.</span>
+          </div>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Hotlink protection</span>
+            <p class="hrg-switch-desc">Stop other websites from embedding your images and using your bandwidth. Your own pages, search engines and direct visits still load them. Uses your domain below.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-hotlink"><span class="hrg-switch-track"></span></label>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- ===== Group 3: Performance ===== -->
+    <details class="hrg-group">
+      <summary>Performance <span class="hrg-group-meta"><span class="hrg-group-count" id="hrg-count-perf"></span><span class="hrg-group-chev">+</span></span></summary>
+      <div class="hrg-group-body">
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Compression</span>
+            <p class="hrg-switch-desc">Gzip text, CSS, JS, JSON, SVG and fonts (zstd + gzip on Caddy). LiteSpeed does this automatically.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-gzip"><span class="hrg-switch-track"></span></label>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">Browser caching</span>
+            <p class="hrg-switch-desc">Cache images, CSS, JS and fonts for a year; never cache HTML. Assumes versioned asset URLs (WordPress adds <code>?ver=</code>).</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-cache"><span class="hrg-switch-track"></span></label>
+        </div>
+
+        <div class="hrg-switch-row">
+          <div class="hrg-switch-text">
+            <span class="hrg-switch-label">WebP image redirects</span>
+            <p class="hrg-switch-desc">Serve <code>photo.jpg.webp</code> automatically when it exists next to <code>photo.jpg</code> and the browser supports WebP.</p>
+          </div>
+          <label class="hrg-switch"><input type="checkbox" id="hrg-webp"><span class="hrg-switch-track"></span></label>
+        </div>
+
+      </div>
+    </details>
+
+    <div class="hrg-domain-field">
+      <label for="hrg-domain">Your domain</label>
+      <input type="text" id="hrg-domain" value="example.com" placeholder="example.com">
+      <span class="hrg-hint">Used for Nginx&#8217;s <code>server_name</code>, Caddy&#8217;s site address, Cloudflare rules, redirect targets and hotlink protection. Apache&#8217;s other rules work for any domain automatically.</span>
+    </div>
+
+    <div class="hrg-tabs" role="tablist">
+      <button class="hrg-tab hrg-tab-active" id="hrg-tab-apache" data-tab="apache" type="button">.htaccess (Apache / LiteSpeed)</button>
+      <button class="hrg-tab" id="hrg-tab-nginx" data-tab="nginx" type="button">Nginx</button>
+      <button class="hrg-tab" id="hrg-tab-caddy" data-tab="caddy" type="button">Caddy</button>
+      <button class="hrg-tab" id="hrg-tab-cloudflare" data-tab="cloudflare" type="button">Cloudflare</button>
+      <button class="hrg-tab" id="hrg-tab-robots" data-tab="robots" type="button" hidden>robots.txt</button>
+    </div>
+
+    <div class="hrg-code-wrap">
+      <div class="hrg-code-toolbar">
+        <span class="hrg-code-filename" id="hrg-filename"><code class="phc">.htaccess</code></span>
+        <div class="hrg-code-actions">
+          <button class="hrg-copy-btn" id="hrg-copy" type="button">Copy Code</button>
+          <button class="hrg-copy-btn hrg-ghost" id="hrg-download" type="button">Download</button>
+          <button class="hrg-copy-btn hrg-ghost" id="hrg-share" type="button">Copy share link</button>
+        </div>
+      </div>
+      <pre class="hrg-code" id="hrg-code"></pre>
+    </div>
+    <p class="hrg-output-note" id="hrg-output-note"></p>
+
+    <div class="hrg-citebox" id="hrg-citebox" hidden></div>
+  </div>
+
+  <div class="hrg-linkbox">
+    <div class="hrg-linkbox-icon">&#128279;</div>
+    <div class="hrg-linkbox-body">
+      <div class="hrg-linkbox-title">Found this useful? Link to it.</div>
+      <p class="hrg-linkbox-desc">If you're writing about .htaccess, Nginx or Caddy config, or WordPress security, here's a ready-to-paste link to this generator.</p>
+      <div class="hrg-linkbox-row">
+        <button class="hrg-linkbox-btn" id="hrg-link-html" type="button">Copy HTML</button>
+        <button class="hrg-linkbox-btn" id="hrg-link-md" type="button">Copy Markdown</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="generator.js"></script>
+</body>
+</html>

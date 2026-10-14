@@ -1,0 +1,23 @@
+# ============================================================
+# Cloudflare rules from the PaidHosting .htaccess, Nginx & Caddy Rule Generator
+# These work whatever server runs behind Cloudflare. Each rule below is one WAF custom rule:
+# in your Cloudflare dashboard, open your site, go to Security > Security rules (older dashboards:
+# Security > WAF > Custom rules), click Create rule and choose "Edit expression".
+# Paste only the expression lines (not the # lines), choose the action shown, then Deploy.
+# The Free plan allows 5 custom rules; this tab never uses more than 4.
+# Reopen or edit this config: https://www.paidhosting.com/htaccess-nginx-generator/?c=hrcsu8&w=strip&t=remove&d=example.com&tab=cloudflare
+# ============================================================
+
+# ---------- Rule 1 of 1: Protect sensitive files and WordPress  (action: Block) ----------
+(http.request.uri.path contains "/." and not starts_with(http.request.uri.path, "/.well-known/"))
+or (http.request.uri.path.extension in {"bak" "conf" "config" "dist" "inc" "ini" "log" "orig" "psd" "save" "sh" "sql" "swo" "swp"})
+or (ends_with(http.request.uri.path, "/composer.json") or ends_with(http.request.uri.path, "/composer.lock") or ends_with(http.request.uri.path, "/package.json") or ends_with(http.request.uri.path, "/package-lock.json") or ends_with(http.request.uri.path, "/yarn.lock"))
+or (http.request.uri.path eq "/xmlrpc.php")
+or (http.request.uri.path eq "/wp-config.php")
+or (starts_with(http.request.uri.path, "/wp-content/uploads/") and http.request.uri.path.extension in {"php" "php5" "php7" "php8" "phtml" "phar"})
+or ((starts_with(http.request.uri.query, "author=") or http.request.uri.query contains "&author=") and not starts_with(http.request.uri.path, "/wp-admin"))
+
+# ---------- Cloudflare settings (no rule needed; open your site in the dashboard) ----------
+# Security headers, caching, WebP, error pages, trailing slashes, directory listing,
+#   extension-free URLs and password protection: keep the rules from your server's tab.
+#   Cloudflare passes them through.

@@ -1,0 +1,65 @@
+# ============================================================
+# Cloudflare rules from the PaidHosting .htaccess, Nginx & Caddy Rule Generator
+# These work whatever server runs behind Cloudflare. Each rule below is one WAF custom rule:
+# in your Cloudflare dashboard, open your site, go to Security > Security rules (older dashboards:
+# Security > WAF > Custom rules), click Create rule and choose "Edit expression".
+# Paste only the expression lines (not the # lines), choose the action shown, then Deploy.
+# The Free plan allows 5 custom rules; this tab never uses more than 4.
+# Reopen or edit this config: https://www.paidhosting.com/htaccess-nginx-generator/?c=hw703k&w=strip&t=remove&d=example.com&tab=cloudflare
+# ============================================================
+
+# ---------- Rule 1 of 2: Block AI crawlers  (action: Block) ----------
+(lower(http.user_agent) contains "gptbot")
+or (lower(http.user_agent) contains "claudebot")
+or (lower(http.user_agent) contains "anthropic-ai")
+or (lower(http.user_agent) contains "ccbot")
+or (lower(http.user_agent) contains "bytespider")
+or (lower(http.user_agent) contains "meta-externalagent")
+or (lower(http.user_agent) contains "facebookbot")
+or (lower(http.user_agent) contains "amazonbot")
+or (lower(http.user_agent) contains "cohere-training-data-crawler")
+or (lower(http.user_agent) contains "diffbot")
+or (lower(http.user_agent) contains "ai2bot")
+or (lower(http.user_agent) contains "omgili")
+or (lower(http.user_agent) contains "deepseekbot")
+or (lower(http.user_agent) contains "pangubot")
+or (lower(http.user_agent) contains "imagesiftbot")
+or (lower(http.user_agent) contains "img2dataset")
+or (lower(http.user_agent) contains "mistralai-training")
+or (lower(http.user_agent) contains "oai-searchbot")
+or (lower(http.user_agent) contains "claude-searchbot")
+or (lower(http.user_agent) contains "perplexitybot")
+or (lower(http.user_agent) contains "duckassistbot")
+or (lower(http.user_agent) contains "mistralai-index")
+or (lower(http.user_agent) contains "meta-webindexer")
+or (lower(http.user_agent) contains "amzn-searchbot")
+or (lower(http.user_agent) contains "cohere-ai")
+or (lower(http.user_agent) contains "kimi-searchbot")
+or (lower(http.user_agent) contains "chatgpt-user")
+or (lower(http.user_agent) contains "claude-user")
+or (lower(http.user_agent) contains "perplexity-user")
+or (lower(http.user_agent) contains "mistralai-user")
+or (lower(http.user_agent) contains "meta-externalfetcher")
+or (lower(http.user_agent) contains "amzn-user")
+
+# ---------- Rule 2 of 2: Block bad bots  (action: Block) ----------
+(lower(http.user_agent) contains "ahrefsbot")
+or (lower(http.user_agent) contains "semrushbot")
+or (lower(http.user_agent) contains "mj12bot")
+or (lower(http.user_agent) contains "dotbot")
+or (lower(http.user_agent) contains "blexbot")
+or (lower(http.user_agent) contains "petalbot")
+or (lower(http.user_agent) contains "dataforseobot")
+or (lower(http.user_agent) contains "seekportbot")
+or (lower(http.user_agent) contains "serpstatbot")
+or (lower(http.user_agent) contains "mauibot")
+or (lower(http.user_agent) contains "nikto")
+or (lower(http.user_agent) contains "sqlmap")
+or (lower(http.user_agent) contains "nmap")
+or (lower(http.user_agent) contains "masscan")
+or (lower(http.user_agent) contains "zgrab")
+or (lower(http.user_agent) contains "libwww-perl")
+or (lower(http.user_agent) contains "python-requests")
+or (lower(http.user_agent) contains "go-http-client")
+or (http.user_agent eq "")
+

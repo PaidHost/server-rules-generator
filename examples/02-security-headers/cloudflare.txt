@@ -1,0 +1,16 @@
+# ============================================================
+# Cloudflare rules from the PaidHosting .htaccess, Nginx & Caddy Rule Generator
+# These work whatever server runs behind Cloudflare. Each rule below is one WAF custom rule:
+# in your Cloudflare dashboard, open your site, go to Security > Security rules (older dashboards:
+# Security > WAF > Custom rules), click Create rule and choose "Edit expression".
+# Paste only the expression lines (not the # lines), choose the action shown, then Deploy.
+# The Free plan allows 5 custom rules; this tab never uses more than 4.
+# Reopen or edit this config: https://www.paidhosting.com/htaccess-nginx-generator/?c=r6w7i8&w=strip&t=remove&d=example.com&tab=cloudflare
+# ============================================================
+
+# ---------- Cloudflare settings (no rule needed; open your site in the dashboard) ----------
+# Force HTTPS: SSL/TLS > Edge Certificates > turn on "Always Use HTTPS"
+# HSTS: SSL/TLS > Edge Certificates > turn on "HTTP Strict Transport Security (HSTS)"
+# Security headers, caching, WebP, error pages, trailing slashes, directory listing,
+#   extension-free URLs and password protection: keep the rules from your server's tab.
+#   Cloudflare passes them through.

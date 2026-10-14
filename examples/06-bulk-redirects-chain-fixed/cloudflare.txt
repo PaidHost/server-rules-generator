@@ -1,0 +1,25 @@
+# ============================================================
+# Cloudflare rules from the PaidHosting .htaccess, Nginx & Caddy Rule Generator
+# These work whatever server runs behind Cloudflare. Each rule below is one WAF custom rule:
+# in your Cloudflare dashboard, open your site, go to Security > Security rules (older dashboards:
+# Security > WAF > Custom rules), click Create rule and choose "Edit expression".
+# Paste only the expression lines (not the # lines), choose the action shown, then Deploy.
+# The Free plan allows 5 custom rules; this tab never uses more than 4.
+# Reopen or edit this config: https://www.paidhosting.com/htaccess-nginx-generator/?c=rqve9s&w=strip&t=remove&d=example.com&tab=cloudflare
+# ============================================================
+
+# ---------- Bulk Redirects list ----------
+# Find "Bulk Redirects" in your Cloudflare account: create a list, import these lines as a .csv file (no header row),
+# then create a Bulk Redirect rule that uses the list. Covers www and keeps visitors' query strings,
+# except where the new URL has its own (Cloudflare can't combine the two).
+example.com/old-page,https://example.com/new-page,301,TRUE,TRUE
+example.com/old-page/,https://example.com/new-page,301,TRUE,TRUE
+example.com/2019/sale,https://example.com/offers,301,TRUE,TRUE
+example.com/2019/sale/,https://example.com/offers,301,TRUE,TRUE
+example.com/sale,https://example.com/offers,301,TRUE,TRUE
+example.com/sale/,https://example.com/offers,301,TRUE,TRUE
+example.com/about-us.html,https://example.com/about,301,TRUE,TRUE
+example.com/about-us.html/,https://example.com/about,301,TRUE,TRUE
+
+# ---------- Cloudflare settings (no rule needed; open your site in the dashboard) ----------
+# Force HTTPS: SSL/TLS > Edge Certificates > turn on "Always Use HTTPS"
